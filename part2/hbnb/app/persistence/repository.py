@@ -42,7 +42,11 @@ class InMemoryRepository(Repository):
     def update(self, obj_id, data):
         obj = self.get(obj_id)
         if obj:
-            obj.update(data)
+            obj.first_name = data.get('first_name', obj.first_name)
+            obj.last_name = data.get('last_name', obj.last_name)
+            obj.email = data.get('email', obj.email)
+        else:
+            raise ValueError("User not found")
 
     def delete(self, obj_id):
         if obj_id in self._storage:
