@@ -63,7 +63,6 @@ class HBnBFacade:
             amenity.update(amenity_data)
             return amenity
         return None
-    
 def create_place(self, place_data):
     # Placeholder for logic to create a place, including validation for price, latitude, and longitude
     pass
@@ -79,3 +78,4 @@ def get_all_places(self):
 def update_place(self, place_id, place_data):
     # Placeholder for logic to update a place
     pass
+    
