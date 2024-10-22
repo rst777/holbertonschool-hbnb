@@ -1,5 +1,5 @@
-import uuid
 from datetime import datetime
+import uuid
 
 class BaseModel:
     def __init__(self):
