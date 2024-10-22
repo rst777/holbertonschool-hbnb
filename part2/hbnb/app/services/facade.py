@@ -3,6 +3,7 @@ from app.models.user import User
 from app.models.amenity import Amenity
 import uuid
 
+
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -47,7 +48,7 @@ class HBnBFacade:
         # Récupérer une commodité par son ID
         amenity = self.amenity_repo.get(amenity_id)
         if amenity:
-            return amenity.to_dict()  # Convertir l'objet en dict avant de le renvoyer
+            return amenity.to_dict()
         return None  # Si l'amenity n'existe pas
 
     def get_all_amenities(self):
@@ -61,7 +62,7 @@ class HBnBFacade:
         if amenity:
             amenity.update(amenity_data)
             return amenity
-        return None 
+        return None
     
     def create_place(self, place_data):
         pass
@@ -71,6 +72,6 @@ class HBnBFacade:
 
     def get_all_places(self):
         pass
-    
+
     def update_place(self, place_id, place_data)
         pass
