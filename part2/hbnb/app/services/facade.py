@@ -61,4 +61,16 @@ class HBnBFacade:
         if amenity:
             amenity.update(amenity_data)
             return amenity
-        return None
+        return None 
+    
+    def create_place(self, place_data):
+        pass
+
+    def get_place(self, place_id):
+        pass
+
+    def get_all_places(self):
+        pass
+    
+    def update_place(self, place_id, place_data)
+        pass
