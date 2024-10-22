@@ -64,7 +64,7 @@ class HBnBFacade:
             return amenity
         return None
     
-    def create_place(self, place_data):
+def create_place(self, place_data):
     # Placeholder for logic to create a place, including validation for price, latitude, and longitude
     pass
 
