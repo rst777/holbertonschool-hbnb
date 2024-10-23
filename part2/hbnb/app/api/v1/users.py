@@ -19,6 +19,12 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
+
+    def get(self):
+        """Retrieve a list of all users"""
+        users = facade.get_all_users()  # Assurez-vous que cette méthode existe
+        return users, 200
+    
     def post(self):
         """Register a new user"""
         print("Received POST request")
@@ -36,6 +42,7 @@ class UserList(Resource):
 class UserResource(Resource):
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
+
     def get(self, user_id):
         """Get user details by ID"""
         user = facade.get_user(user_id)
