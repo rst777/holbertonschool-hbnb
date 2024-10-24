@@ -1,6 +1,5 @@
 #!/user/bin/python3
 
-# models/review.py
 from .basemodel import BaseModel
 from .place import Place
 from .user import User
