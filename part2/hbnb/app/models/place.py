@@ -1,23 +1,25 @@
-#!/user/bin/python3
+#!/usr/bin/python3
 
-from .app.models. import Basemodel
-from .app.models.user import User
-from .app.models.review import Review
+from app.models.basemodel import BaseModel
+from app.models.user import User
+from app.models.review import Review
 
-class Place(Basemodel):
-    def _init_(self, title, description, price, latitude, longitude, owner)
-        super()._init_()
-        self.title =title 
+class Place(BaseModel):
+    def __init__(self, title, description, price, latitude, longitude, owner):
+        super().__init__()
+        self.title = title
         self.description = description
-        self.price = price 
-        self.latitude = latitude 
-        self.longitude = longitude 
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
         self.owner = owner
-        self.review = []
-        self.ameneties = []
+        self.reviews = []  # Liste pour les reviews
+        self.amenities = []  # Liste pour les amenities
 
-        def add_review(self, review):
+    def add_review(self, review):
+        """Ajoute un avis à la place."""
         self.reviews.append(review)
 
     def add_amenity(self, amenity):
+        """Ajoute un équipement à la place."""
         self.amenities.append(amenity)
