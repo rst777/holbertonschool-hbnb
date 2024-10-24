@@ -1,10 +1,11 @@
-"""
-API v1 package initialization
-"""
+from flask import Flask
+from flask_restx import Api
 
-from app.api.v1.users import api as user_api
-from app.api.v1.places import api as place_api
-from app.api.v1.reviews import api as review_api
-from app.api.v1.amenities import api as amenity_api
+def create_app():
+    app = Flask(__name__)
+    api = Api(app, version='1.0', title='HBnB API', description='HBnB Application API', doc='/api/v1/')
 
-__all__ = ['user_api', 'place_api', 'review_api', 'amenity_api']
+    # Placeholder for API namespaces (endpoints will be added later)
+    # Additional namespaces for places, reviews, and amenities will be added later
+
+    return app
