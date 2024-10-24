@@ -1,23 +1,9 @@
-"""Amenity model module"""
+#!/user/bin/python3
 
-from datetime import datetime
-import uuid
+from .app.models.basemodel import BaseModel
 
-class Amenity:
+class Amenity(BaseModel):
     def __init__(self, name):
-        self.id = str(uuid.uuid4())
-        self.name = name
-        self.created_at = datetime.utcnow()
-        self.updated_at = self.created_at
+        super().__init__()
+        self.name = name  # Nom de l'équipement (ex : Wi-Fi)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat()
-        }
-
-    def validate(self):
-        if not self.name or len(self.name) > 50:
-            raise ValueError("Name required and must not exceed 50 chars")
