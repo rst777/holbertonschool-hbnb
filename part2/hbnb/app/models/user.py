@@ -9,4 +9,3 @@ class User(BaseModel):
         self.last_name = last_name  
         self.email = email  
         self.is_admin = is_admin  
-
