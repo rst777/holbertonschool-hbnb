@@ -1,8 +1,8 @@
 #!/user/bin/python3
 
-from .basemodel import BaseModel
-from .place import Place
-from .user import User
+from .app.models.basemodel import BaseModel
+from .app.models.place import Place
+from .app.models.user import User
 
 class Review(BaseModel):
     def __init__(self, text, rating, place, user):
