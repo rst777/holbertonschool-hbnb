@@ -1,6 +1,6 @@
 #!/user/bin/python3
 
-from .basemodel import BaseModel
+from .app.models import BaseModel
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, is_admin=False):

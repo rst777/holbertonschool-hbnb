@@ -1,7 +1,8 @@
 #!/user/bin/python3
 
-from .basemodel import Basemodel
-from .user import User
+from .app.models. import Basemodel
+from .app.models.user import User
+from .app.models.review import Review
 
 class Place(Basemodel):
     def _init_(self, title, description, price, latitude, longitude, owner)
