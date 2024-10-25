@@ -33,6 +33,16 @@ class UserList(Resource):
             'last_name': new_user.last_name,
             'email': new_user.email
         }, 201
+    
+    def get(self):
+        """Récupère la liste de tous les utilisateurs"""
+        users = facade.get_all_users()  # Ajouter cette méthode dans la facade
+        return [{
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email
+        } for user in users], 200
 
 @api.route('/<user_id>')
 class UserResource(Resource):
@@ -48,4 +58,17 @@ class UserResource(Resource):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email
+        }, 200
+    
+    def put(self, user_id):
+        """Met à jour les informations de l'utilisateur"""
+        user_data = api.payload
+        updated_user = facade.update_user(user_id, user_data)  # Ajoute cette méthode dans la facade
+        if not updated_user:
+            return {'error': 'Utilisateur non trouvé'}, 404
+        return {
+            'id': updated_user.id,
+            'first_name': updated_user.first_name,
+            'last_name': updated_user.last_name,
+            'email': updated_user.email
         }, 200
