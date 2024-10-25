@@ -9,5 +9,6 @@ def test_place_creation():
     assert place.title == "Cozy Apartment"
     assert place.price == 100
     assert place.owner == owner
+    print("Place test creation is passed!")
 
 test_place_creation()
