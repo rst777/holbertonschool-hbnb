@@ -11,4 +11,3 @@ def test_place_creation():
     assert place.owner == owner
 
 test_place_creation()
-
