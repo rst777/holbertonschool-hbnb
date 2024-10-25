@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from app.models.basemodel import BaseModel
+from app.models import BaseModel
 from app.models.user import User
 from app.models.review import Review
 
