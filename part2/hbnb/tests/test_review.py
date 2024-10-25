@@ -12,5 +12,6 @@ def test_review_creation():
     assert review.rating == 5
     assert review.place == place
     assert review.user == owner
+    print("Review test creation passed!")
 
 test_review_creation()
