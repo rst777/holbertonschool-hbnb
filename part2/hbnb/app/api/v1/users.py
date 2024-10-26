@@ -44,9 +44,6 @@ class UserList(Resource):
             'email': user.email
         } for user in users], 200
     
-    def home():
-        return "Welcome to HBnB API!"
-
 
 @api.route('/<user_id>')
 class UserResource(Resource):
