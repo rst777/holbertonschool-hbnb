@@ -50,4 +50,3 @@ class ReviewResource(Resource):
         if current_app.facade.delete_review(review_id):
             return '', 204
         api.abort(404)
-
