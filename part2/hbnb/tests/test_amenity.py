@@ -1,4 +1,4 @@
-#!/user/bin/python3
+#!/usr/bin/python3
 
 from app.models.amenity import Amenity
 
