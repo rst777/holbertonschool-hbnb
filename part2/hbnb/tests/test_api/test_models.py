@@ -1,6 +1,7 @@
 #!/user/bin/python3
 
 import unittest
+from app import create_app
 from app.models.place import Place
 from app.models.user import User
 from app.models.review import Review
