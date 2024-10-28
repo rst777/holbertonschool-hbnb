@@ -1,56 +1,72 @@
+"""Amenities API endpoints implementation."""
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade
-from app.services import AmenityService
+from app.services.facade import facade
 
 api = Namespace('amenities', description='Amenity operations')
 
-# Define the amenity model for input validation and documentation
 amenity_model = api.model('Amenity', {
-    'name': fields.String(required=True, description='Name of the amenity')
+    'id': fields.String(readonly=True, description='Unique identifier'),
+    'name': fields.String(required=True, description='Name of the amenity'),
+    'created_at': fields.DateTime(readonly=True),
+    'updated_at': fields.DateTime(readonly=True)
 })
 
-facade = HBnBFacade()
+def validate_amenity_name(name):
+    if not name or not name.strip():
+        raise ValueError("Amenity name cannot be empty")
 
 @api.route('/')
 class AmenityList(Resource):
-    @api.expect(amenity_model)
-    @api.response(201, 'Amenity successfully created')
-    @api.response(400, 'Invalid input data')
-    def post(self):
-        """Register a new amenity"""
-        data = api.payload
-        new_amenity = facade.create_amenity(data)
-        return new_amenity, 201
-
-
-    @api.response(200, 'List of amenities retrieved successfully')
+    @api.doc('list_amenities')
+    @api.marshal_list_with(amenity_model)
     def get(self):
-        """Retrieve a list of all amenities"""
-        amenities = facade.get_all_amenities()
-        return amenities, 200
+        """List all amenities"""
+        return facade.get_all_amenities()
 
-@api.route('/<amenity_id>')
+    @api.doc('create_amenity')
+    @api.expect(api.model('AmenityInput', {
+        'name': fields.String(required=True, description='Name of the amenity')
+    }))
+    @api.marshal_with(amenity_model, code=201)
+    @api.response(400, 'Validation Error')
+    def post(self):
+        """Create a new amenity"""
+        try:
+            validate_amenity_name(api.payload['name'])
+            return facade.create_amenity(api.payload), 201
+        except ValueError as e:
+            api.abort(400, str(e))
+
+@api.route('/<string:amenity_id>')
+@api.param('amenity_id', 'The amenity identifier')
+@api.response(404, 'Amenity not found')
 class AmenityResource(Resource):
-    @api.response(200, 'Amenity details retrieved successfully')
+    @api.doc('get_amenity')
+    @api.marshal_with(amenity_model)
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
-        """Get amenity details by ID"""
+        """Fetch an amenity by ID"""
         amenity = facade.get_amenity(amenity_id)
-        if amenity:
-            return amenity, 200
-        return {'message': 'Amenity not found'}, 404
+        if amenity is None:
+            api.abort(404, f"Amenity {amenity_id} not found")
+        return amenity
 
-    @api.expect(amenity_model)
-    @api.response(200, 'Amenity updated successfully')
+    @api.doc('update_amenity')
+    @api.expect(api.model('AmenityUpdate', {
+        'name': fields.String(required=True, description='New name of the amenity')
+    }))
+    @api.marshal_with(amenity_model)
     @api.response(404, 'Amenity not found')
-    @api.response(400, 'Invalid input data')
-
+    @api.response(400, 'Validation Error')
     def put(self, amenity_id):
-        """Update an amenity's information"""
-        data = api.payload
-
-        updated_amenity = facade.update_amenity(amenity_id, data)
-
-        if updated_amenity:
-           return {"message": "Amenity updated successfully"}, 200
-        return {'message': 'Amenity not found'}, 404
+        """Update an amenity"""
+        try:
+            amenity = facade.get_amenity(amenity_id)
+            if amenity is None:
+                api.abort(404, f"Amenity {amenity_id} not found")
+            
+            validate_amenity_name(api.payload['name'])
+            updated_amenity = facade.update_amenity(amenity_id, api.payload)
+            return updated_amenity
+        except ValueError as e:
+            api.abort(400, str(e))
