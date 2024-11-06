@@ -13,17 +13,6 @@ user_model = api.model('User', {
 
 facade = HBnBFacade()
 
-@api.route('/')
-class UserList(Resource):
-    @api.expect(user_model, validate=True)
-    @api.response(201, 'User successfully created')
-    @api.response(400, 'Email already registered')
-        from flask_restx import Namespace, Resource, fields
-        from app.services.facade import facade
-        from app.models.user import User
-
-api = Namespace('users', description='User operations')
-
 # Input and output models for API documentation
 user_model = api.model('User', {
     'id': fields.String(readonly=True, description='Unique identifier'),
@@ -33,6 +22,7 @@ user_model = api.model('User', {
     'created_at': fields.DateTime(readonly=True, description='Creation timestamp'),
     'updated_at': fields.DateTime(readonly=True, description='Update timestamp')
 })
+
 user_input_model = api.model('UserInput', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
@@ -76,19 +66,11 @@ class UserResource(Resource):
     @api.marshal_with(user_model)
     def put(self, user_id):
         """Update a user"""
-        user = facade.get_user(user_id)
-        if user is None:
-            api.abort(404, f"User {user_id} not found")
         try:
             return facade.update_user(user_id, api.payload)
         except ValueError as e:
             api.abort(400, str(e))
-    @api.response(400, 'Invalid input data')
-    def post(self):
-        """Register a new user"""
-        print("Received POST request")
-        user_data = api.payload
-
+            
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:

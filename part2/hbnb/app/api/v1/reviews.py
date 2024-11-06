@@ -88,3 +88,12 @@ class PlaceReviewList(Resource):
         except ValueError as e:
             api.abort(400, str(e))
 
+@api.route('/places/<string:place_id>/reviews')
+class PlaceReviews(Resource):
+    @api.marshal_list_with(review_model)
+    def get(self, place_id):
+        """Get all reviews for a place"""
+        try:
+            return facade.get_reviews_by_place(place_id)
+        except ValueError as e:
+            api.abort(404, str(e))

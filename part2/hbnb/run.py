@@ -1,15 +1,21 @@
-from app import create_app
-from app.api.v1 import blueprint as api_v1_blueprint
+from flask import Flask, redirect
+from app.api import api_v1_blueprint
+from config import Config
 
-app = create_app()
-
-app.register_blueprint(api_v1_blueprint, url_prefix='/api/v1')
-
-def list_routes():
-    for rule in app.url_map.iter_rules():
-        print(f"{rule.endpoint}: {rule.rule} -> {rule.methods}")
-
-list_routes()
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    
+    # Register blueprint
+    app.register_blueprint(api_v1_blueprint)
+    
+    # Add root route that redirects to API documentation
+    @app.route('/')
+    def index():
+        return redirect('/api/v1/')
+    
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)

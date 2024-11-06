@@ -11,11 +11,11 @@ class HBnBFacade:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            # Initialize repositories here
-            cls._instance.user_repo = InMemoryRepository(User)
-            cls._instance.amenity_repo = InMemoryRepository(Amenity)
-            cls._instance.place_repo = InMemoryRepository(Place)
-            cls._instance.review_repo = InMemoryRepository(Review)
+        # Initialize repositories with their respective models
+            cls._instance.user_repo = InMemoryRepository(model_class=User)
+            cls._instance.amenity_repo = InMemoryRepository(model_class=Amenity)
+            cls._instance.place_repo = InMemoryRepository(model_class=Place)
+            cls._instance.review_repo = InMemoryRepository(model_class=Review)
             cls._instance._initialized = False
         return cls._instance
 
@@ -65,7 +65,7 @@ class HBnBFacade:
             for key, value in user_data.items():
                 setattr(user, key, value)
             user.validate()
-            self.user_repo.update(user_id, user)
+            self.user_repo.update(user_id, user_data)  # Passez user_data au lieu de user
             return user
         except Exception as e:
             raise ValueError(f"Error updating user: {str(e)}")
@@ -172,6 +172,15 @@ class HBnBFacade:
             raise ValueError(f"Error updating place: {str(e)}")
 
 # Review methods
+    def get_reviews_by_place(self, place_id):
+        """Get all reviews for a specific place"""
+        place = self.get_place(place_id)
+        if not place:
+            raise ValueError(f"Place {place_id} not found")
+
+        all_reviews = self.get_all_reviews()
+        return [review for review in all_reviews if review.place_id == place_id]
+
     def create_review(self, review_data):
         """Create new review"""
         try:

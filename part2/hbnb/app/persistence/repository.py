@@ -27,8 +27,9 @@ class Repository(ABC):
 
 
 class InMemoryRepository(Repository):
-    def __init__(self):
+    def __init__(self, model_class=None):
         self._storage = {}
+        self.model_class = model_class
 
     def add(self, obj):
         print(f"Ajout de l'objet {obj.id} : {obj}")

@@ -1,22 +1,27 @@
-"""
-API v1 package initialization
-"""
+"""API v1 endpoints - Main configuration file for the API"""
+from flask import Blueprint
 from flask_restx import Api
+from app.api.v1.users import api as user_ns
+from app.api.v1.places import api as place_ns  
+from app.api.v1.reviews import api as review_ns
+from app.api.v1.amenities import api as amenity_ns
 
+# Create Blueprint for API v1
+blueprint = Blueprint('api_v1', __name__, url_prefix='/api/v1')
+
+# Initialize API with Swagger documentation
 api = Api(
-    title='HBnB API',
+    blueprint,
+    title='HBnB REST API', 
     version='1.0',
-    description='HBnB Application API'
+    description='API for managing users, places, reviews and amenities'
 )
 
-from .users import api as users_ns
-from .places import api as places_ns
-from .amenities import api as amenities_ns
-from .reviews import api as reviews_ns
+# Register all namespaces/routes
+api.add_namespace(user_ns)
+api.add_namespace(place_ns)
+api.add_namespace(review_ns)
+api.add_namespace(amenity_ns)
 
-api.add_namespace(users_ns, path='/api/v1/users')
-api.add_namespace(places_ns, path='/api/v1/places')
-api.add_namespace(amenities_ns, path='/api/v1/amenities')
-api.add_namespace(reviews_ns, path='/api/v1/reviews')
-
-__all__ = ['user_api', 'place_api', 'review_api', 'amenity_api']
+# Important: Make blueprint available for import
+__all__ = ['blueprint']

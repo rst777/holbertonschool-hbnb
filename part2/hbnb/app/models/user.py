@@ -16,11 +16,11 @@ class User(BaseModel):
 
     def validate(self):
         """Validate user data"""
-        if not self.first_name or len(self.first_name.strip()) == 0:
+        if not self.first_name or not self.first_name.strip():
             raise ValueError("first_name cannot be empty")
-        if not self.last_name or len(self.last_name.strip()) == 0:
+        if not self.last_name or not self.last_name.strip():
             raise ValueError("last_name cannot be empty")
-        if not self.email or len(self.email.strip()) == 0:
+        if not self.email or not self.email.strip():
             raise ValueError("email cannot be empty")
         if '@' not in self.email:
             raise ValueError("Invalid email format")
