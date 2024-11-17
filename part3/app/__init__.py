@@ -1,14 +1,10 @@
 from flask import Flask
 from flask_restx import Api
 
-def create_app(config_name):
+def create_app():
     app = Flask(__name__)
     api = Api(app, version='1.0', title='HBnB API', 
               description='HolbertonBnB API')
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
-    
-    
 
     # Import namespaces
     from app.api.v1.users import api as users_ns
