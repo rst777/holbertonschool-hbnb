@@ -1,7 +1,4 @@
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
-def init_app(app):
-            pass
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
