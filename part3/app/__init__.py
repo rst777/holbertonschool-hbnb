@@ -1,9 +1,16 @@
 from flask import Flask
 from flask_restx import Api
 
-def create_app():
+def create_app(config_name='default'):
+    """Create and configure the Flask application."""
     app = Flask(__name__)
-    api = Api(app, version='1.0', title='HBnB API', 
+
+    # Load configuration
+    from part3.config import config  # Import the config dictionary
+    app.config.from_object(config[config_name])
+
+    # Create API
+    api = Api(app, version='1.0', title='HBnB API',
               description='HolbertonBnB API')
 
     # Import namespaces
@@ -19,6 +26,3 @@ def create_app():
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
 
     return app
-
-# Create the facade instance
-from app.services.facade import facade
