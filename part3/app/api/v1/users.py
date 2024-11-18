@@ -164,3 +164,8 @@ class UserLogin(Resource):
         user = next((u for u in user_data if u.email == email), None)
         if not user or not user.check_password(password):
             return {"error": "Invalid email or password."}, 401
+        
+        access_token = create_access_token(identify=user.email)
+        return {"access_token": access_token}, 200
+
+        
