@@ -7,7 +7,6 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt
 
 
-
 class User(BaseModel):
     """User Model"""
     def __init__(self, id, email, password, **kwargs):
@@ -31,12 +30,6 @@ class User(BaseModel):
         user_dict = self._dict_.copy()
         user_dict.pop('_password', None)
         return user_dict 
-     
-
-    
-
-
-    
 
     def validate(self):
         """Validate user data"""
