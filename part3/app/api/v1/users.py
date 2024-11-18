@@ -167,5 +167,4 @@ class UserLogin(Resource):
         
         access_token = create_access_token(identify=user.email)
         return {"access_token": access_token}, 200
-
         
