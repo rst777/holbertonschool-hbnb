@@ -2,6 +2,8 @@ from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 from app.models.user import User
 from flask import request, jsonify
+from flask_jwt_extended import create_access_token, jwt_required
+
 
 api = Namespace('users', description='User operations')
 user_data= []
@@ -149,3 +151,16 @@ class UserResource(Resource):
                 'last_name': existing_user.last_name,
                 'email': existing_user.email
             }, 200
+    
+@api.route('/login')
+class UserLogin(Resource):
+    def post(self):
+        """Endpoint pour authentifier un utilisateur et générer un token JWT."""
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        # Trouver l'utilisateur par email
+        user = next((u for u in user_data if u.email == email), None)
+        if not user or not user.check_password(password):
+            return {"error": "Invalid email or password."}, 401
