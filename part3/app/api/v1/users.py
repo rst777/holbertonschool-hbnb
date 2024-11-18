@@ -1,8 +1,10 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 from app.models.user import User
+from flask import request, jsonify
 
 api = Namespace('users', description='User operations')
+user_data= []
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -36,7 +38,7 @@ class UserList(Resource):
     def get(self):
         """List all users"""
         return facade.get_all_users()
-
+        
     @api.doc('create_user')
     @api.expect(user_input_model)
     @api.marshal_with(user_model, code=201)
@@ -60,6 +62,10 @@ class UserResource(Resource):
         if user is None:
             api.abort(404, f"User {user_id} not found")
         return user
+    
+    def get(self):
+        """GET all users without passwords"""
+        return [user.to_dict() for user in user_data], 200 
 
     @api.doc('update_user')
     @api.expect(user_input_model)
@@ -78,6 +84,21 @@ class UserResource(Resource):
 
         new_user = facade.create_user(user_data)
         return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
+    
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        password =data.get('password')
+
+        if not email or not password:
+            return {"error":"Email and password are required"}, 400
+        
+        if any(user.email == email for user in user_data):
+            return {"error": "User already exists."},400
+        
+        new_user = User(id=len(user_data) + 1, email=email, password=password)
+        user_data.append(new_user)
+        return new_user.to_dict(), 201
 
 @api.route('/<user_id>')
 class UserResource(Resource):
