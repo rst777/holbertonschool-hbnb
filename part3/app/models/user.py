@@ -26,6 +26,11 @@ class User(BaseModel):
     @property
     def password(self):
         raise AttributeError("Password is write-only!")
+    
+    def to_dict(self):
+        user_dict = self._dict_.copy()
+        user_dict.pop('_password', None)
+        return user_dict 
      
 
     
