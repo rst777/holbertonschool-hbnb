@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 
 bcrypt = Bcrypt()
+jwt = JWTManager()
 
 def create_app(config_name='default'):
     """Create and configure the Flask application."""
@@ -13,6 +14,7 @@ def create_app(config_name='default'):
     from part3.config import config  # Import the config dictionary
     app.config.from_object(config[config_name])
     bcrypt.init_app(app)
+    jwt.init_app(app)
 
     # Create API
     api = Api(app, version='1.0', title='HBnB API',
