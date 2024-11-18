@@ -4,6 +4,8 @@ from app.models.base_model import BaseModel
 import uuid
 from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt
+
 
 class User(BaseModel):
     """User Model"""
