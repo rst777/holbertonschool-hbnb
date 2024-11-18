@@ -94,7 +94,7 @@ class UserResource(Resource):
             return {"error":"Email and password are required"}, 400
         
         if any(user.email == email for user in user_data):
-            return {"error": "User already exists."},400
+            return {"error": "User already exists."}, 400
         
         new_user = User(id=len(user_data) + 1, email=email, password=password)
         user_data.append(new_user)
