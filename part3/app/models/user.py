@@ -2,6 +2,7 @@
 from datetime import datetime
 from app.models.base_model import BaseModel
 import uuid
+from flask_bcrypt import Bcrypt
 
 
 class User(BaseModel):
@@ -13,6 +14,9 @@ class User(BaseModel):
         self.last_name = kwargs.get('last_name', '')
         self.email = kwargs.get('email', '')
         self.validate()
+
+        def set_password(set , password):
+            self._password = bcrypt.generate_password_hash(password)
 
     def validate(self):
         """Validate user data"""
