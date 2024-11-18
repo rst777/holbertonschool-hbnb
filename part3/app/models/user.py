@@ -7,18 +7,31 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt
 
 
+
 class User(BaseModel):
     """User Model"""
-    def __init__(self, *args, **kwargs):
+    def __init__(self, id, email, password, **kwargs):
         """Initialize user"""
-        super().__init__(*args, **kwargs)
-        self.first_name = kwargs.get('first_name', '')
-        self.last_name = kwargs.get('last_name', '')
-        self.email = kwargs.get('email', '')
-        self.validate()
+        self.id = id
+        self.set_password(password)
+        self.email = email
+        self.other_attributes = kwargs
+    
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+    
+    def check_password(self , password):
+        return bcrypt.check_password_hash(self._password, password)
+    
+    @property
+    def password(self):
+        raise AttributeError("Password is write-only!")
+     
 
-        def set_password(set , password):
-            self._password = bcrypt.generate_password_hash(password).decode('utf-8')
+    
+
+
+    
 
     def validate(self):
         """Validate user data"""
