@@ -18,7 +18,7 @@ class User(BaseModel):
         self.validate()
 
         def set_password(set , password):
-            self._password = bcrypt.generate_password_hash(password)
+            self._password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def validate(self):
         """Validate user data"""
