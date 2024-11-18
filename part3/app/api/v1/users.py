@@ -87,6 +87,10 @@ class UserResource(Resource):
         new_user = facade.create_user(user_data)
         return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
     
+    @jwt_required()
+    def get(self):
+        return [user.to_dict() for user in user_data], 200
+    
     def post(self):
         data = request.get_json()
         email = data.get('email')
