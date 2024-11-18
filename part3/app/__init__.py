@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask import Flask, jsonify
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
@@ -33,3 +34,11 @@ def create_app(config_name='default'):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
 
     return app
+
+@jwt.unauthorized_loader
+def unauthorized_callback(callback):
+    return jsonify({"error": "Missing or invalid token."}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(callback):
+    return jsonify({"error": "Invalid token provided."})
