@@ -4,12 +4,14 @@ from app.models.base_model import BaseModel
 import uuid
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
+from sqlalchemy import Boolean, Column 
 
 
 bcrypt = Bcrypt
 
 
 class User(BaseModel):
+    is_admin = Column(Boolean, default= False)
     """User Model"""
     def __init__(self, id, email, password, **kwargs):
         """Initialize user"""
