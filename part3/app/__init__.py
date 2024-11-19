@@ -20,6 +20,14 @@ def create_app(config_name='default'):
     # Create API
     api = Api(app, version='1.0', title='HBnB API',
               description='HolbertonBnB API')
+    
+@jwt.unauthorized_loader
+def unauthorized_callback(callback):
+    return jsonify({"error": "Missing or invalid token."}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(callback):
+    return jsonify({"error": "Invalid token provided."})
 
     # Import namespaces
     from app.api.v1.users import api as users_ns
@@ -34,11 +42,3 @@ def create_app(config_name='default'):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
 
     return app
-
-@jwt.unauthorized_loader
-def unauthorized_callback(callback):
-    return jsonify({"error": "Missing or invalid token."}), 401
-
-@jwt.invalid_token_loader
-def invalid_token_callback(callback):
-    return jsonify({"error": "Invalid token provided."})
