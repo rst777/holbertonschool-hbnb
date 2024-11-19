@@ -3,6 +3,8 @@ from datetime import datetime
 from app.models.base_model import BaseModel
 import uuid
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import create_access_token
+
 
 bcrypt = Bcrypt
 
@@ -22,6 +24,8 @@ class User(BaseModel):
     def check_password(self , password):
         return bcrypt.check_password_hash(self._password, password)
     
+    def generate_jwt(self):
+        return create_access_token(identity={'id': self.id, 'email': self.email})
     @property
     def password(self):
         raise AttributeError("Password is write-only!")
