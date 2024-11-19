@@ -26,6 +26,7 @@ class User(BaseModel):
     
     def generate_jwt(self):
         return create_access_token(identity={'id': self.id, 'email': self.email})
+    
     @property
     def password(self):
         raise AttributeError("Password is write-only!")
