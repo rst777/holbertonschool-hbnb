@@ -1,6 +1,9 @@
 """Places API endpoints implementation."""
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import request, jsonify
+place_db =[]
 
 api = Namespace('places', description='Place operations')
 
@@ -48,6 +51,27 @@ class PlaceList(Resource):
 @api.param('place_id', 'The place identifier')
 @api.response(404, 'Place not found')
 class PlaceResource(Resource):
+    @jwt_required()
+    def post(self):
+        """Create a new place (authenticated users only)."""
+        user = get_jwt_identity()  # Récupère l'utilisateur à partir du token
+        data = request.get_json()
+
+        if not data.get('name') or not data.get('location'):
+            return {"error": "Name and location are required."}, 400
+
+        # Crée un nouveau lieu pour l'utilisateur connecté
+        new_place = {
+            "id": len(place_db) + 1,
+            "name": data['name'],
+            "location": data['location'],
+            "owner_id": user['id']
+        }
+        place_db.append(new_place)
+        return new_place, 201
+
+
+
     @api.doc('get_place')
     @api.marshal_with(place_model)
     def get(self, place_id):
@@ -67,6 +91,7 @@ class PlaceResource(Resource):
         'amenity_ids': fields.List(fields.String)
     }))
     @api.marshal_with(place_model)
+    @jwt_required()
     def put(self, place_id):
         """Update a place"""
         try:
@@ -76,3 +101,14 @@ class PlaceResource(Resource):
             return place
         except ValueError as e:
             api.abort(400, str(e))
+
+        user = get_jwt_identity()
+        data = request.get_json()
+        place_id = data.get('id')
+        place = next((p for p in place_db if p['id'] == place_id), None)
+        if not place or place['owner_id'] != user['id']:
+            return {"error": "You can only update your own places."}, 403
+
+        # Mise à jour des données
+        place.update({key: data[key] for key in data if key != 'id'})
+        return place, 200
