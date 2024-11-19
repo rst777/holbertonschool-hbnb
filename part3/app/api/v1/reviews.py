@@ -1,6 +1,9 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
 from flask import request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+review_db =[]
+place_db =[]
 
 api = Namespace('reviews', description='Review operations')
 
@@ -36,6 +39,40 @@ class ReviewList(Resource):
 @api.route('/<string:review_id>')
 @api.param('review_id', 'The review identifier')
 @api.response(404, 'Review not found')
+
+@jwt_required()
+def post(self):
+    """Create a review (user cannot review their own places)."""
+    user = get_jwt_identity()
+    data = request.get_json()
+    place_id = data.get('place_id')
+
+    # Trouver le lieu
+    place = next((p for p in place_db if p['id'] == place_id), None)
+    if not place:
+        return {"error": "Place not found."}, 404
+
+    # Vérifier que l'utilisateur ne révise pas son propre lieu
+    if place['owner_id'] == user['id']:
+        return {"error": "You cannot review your own place."}, 403
+
+    # Vérifier que l'utilisateur n'a pas déjà évalué ce lieu
+    existing_review = next(
+        (r for r in review_db if r['place_id'] == place_id and r['reviewer_id'] == user['id']), None)
+    if existing_review:
+        return {"error": "You cannot review a place more than once."}, 400
+
+    # Créer une nouvelle revue
+    new_review = {
+        "id": len(review_db) + 1,
+        "place_id": place_id,
+        "reviewer_id": user['id'],
+        "content": data['content']
+    }
+    review_db.append(new_review)
+    return new_review, 201
+
+
 class ReviewResource(Resource):
     @api.doc('get_review')
     @api.marshal_with(review_model)
