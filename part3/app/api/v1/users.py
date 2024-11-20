@@ -6,9 +6,34 @@ from flask_jwt_extended import create_access_token, jwt_required
 from part3.app.api import admin_required
 from models import storage
 from models.user import User
+from flask import Flask
+
+app = Flask(__name__)
 
 api = Namespace('users', description='User operations')
 user_data= []
+
+@app.route('/users', methods=['POST'])
+@admin_required
+def create_user():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Missing data"}), 400
+
+    email = data.get('email')
+    password = data.get('password')
+    if not email or not password:
+        return jsonify({"error": "Missing email or password"}), 400
+
+    # Vérifiez que l'email est unique
+    existing_user = storage.get_user_by_email(email)
+    if existing_user:
+        return jsonify({"error": "Email already in use"}), 400
+
+    # Créez l'utilisateur
+    user = User(email=email, password=password)
+    storage.save(user)
+    return jsonify(user.to_dict()), 201
 
 # Define the user model for input validation and documentation
 user_model = api.model('User', {
@@ -173,4 +198,4 @@ class UserLogin(Resource):
         
         access_token = create_access_token(identify=user.email)
         return {"access_token": access_token}, 200
-        
+            
