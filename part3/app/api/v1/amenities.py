@@ -2,6 +2,8 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
 
+app = Flask(__name__)
+
 api = Namespace('amenities', description='Amenity operations')
 
 amenity_model = api.model('Amenity', {
@@ -70,3 +72,18 @@ class AmenityResource(Resource):
             return updated_amenity
         except ValueError as e:
             api.abort(400, str(e))
+
+@app.route('/amenities', methods=['POST'])
+@admin_required
+def create_amenity():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Missing data"}), 400
+
+    name = data.get('name')
+    if not name:
+        return jsonify({"error": "Missing name"}), 400
+
+    amenity = Amenity(name=name)
+    storage.save(amenity)
+    return jsonify(amenity.to_dict()), 201
