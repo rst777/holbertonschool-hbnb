@@ -3,7 +3,7 @@ from app.services.facade import HBnBFacade
 from app.models.user import User
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
-from part3.app.api import admin_required
+from app.api import admin_required
 from models import storage
 from models.user import User
 from flask import Flask

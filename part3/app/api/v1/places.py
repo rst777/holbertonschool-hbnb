@@ -3,7 +3,11 @@ from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request, jsonify
+from flask import Flask
+from models import storage
+
 place_db =[]
+app = Flask(__name__)
 
 api = Namespace('places', description='Place operations')
 
@@ -112,3 +116,28 @@ class PlaceResource(Resource):
         # Mise à jour des données
         place.update({key: data[key] for key in data if key != 'id'})
         return place, 200
+    
+@app.route('/places/<place_id>', methods=['PUT'])
+@jwt_required()
+def update_place(place_id):
+    current_user_id = get_jwt_identity()
+    current_user = storage.get("User", current_user_id)
+    place = storage.get("Place", place_id)
+
+    if not place:
+        return jsonify({"error": "Place not found"}), 404
+
+    # Vérifiez la propriété ou si l'utilisateur est admin
+    if not current_user.is_admin and place.user_id != current_user_id:
+        return jsonify({"error": "Access forbidden"}), 403
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Missing data"}), 400
+
+    # Mettre à jour la place
+    for key, value in data.items():
+        setattr(place, key, value)
+    storage.save(place)
+    return jsonify(place.to_dict()), 200
+    
