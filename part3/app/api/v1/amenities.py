@@ -1,7 +1,11 @@
 """Amenities API endpoints implementation."""
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import facade
-
+from flask import Flask
+from flask import request, jsonify
+from app.api import admin_required
+from models import storage
+from app.models import Amenity
 app = Flask(__name__)
 
 api = Namespace('amenities', description='Amenity operations')
