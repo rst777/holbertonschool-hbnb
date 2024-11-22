@@ -6,14 +6,22 @@ Common validation and serialization for HBnB models.
 import uuid
 from typing import Dict, Any
 from datetime import datetime
+from sqlalchemy import Column, DateTime, Integer
+from sqlalchemy.ext.declarative import as_declarative
+from datetime import datetime
 
 
 class ValidationError(Exception):
     """Custom validation error"""
     pass
 
-
+@as_declarative()
 class BaseModel:
+    """Classe de base pour tous les modèles SQLAlchemy."""
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
     """Base model with ID and validation"""
 
     def __init__(self, *args, **kwargs):
@@ -44,6 +52,7 @@ class BaseModel:
         result['updated_at'] = self.updated_at.isoformat()
         result['__class__'] = self.__class__.__name__
         return result
+    
 
     def validate(self) -> None:
         """
