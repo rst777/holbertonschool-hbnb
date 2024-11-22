@@ -22,7 +22,7 @@ class User(BaseModel):
     
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-    
+        
     def check_password(self , password):
         return bcrypt.check_password_hash(self._password, password)
     
