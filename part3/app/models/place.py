@@ -12,10 +12,7 @@ class Place(BaseModel):
     number_bathrooms = Column(Integer, default=0, nullable=False)
     max_guest = Column(Integer, default=0, nullable=False)
     price_by_night = Column(Integer, default=0, nullable=False)
-
-
-
-
+    
     """Place Model"""
     
     def __init__(self, *args, **kwargs):
