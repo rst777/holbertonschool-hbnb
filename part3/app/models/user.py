@@ -4,13 +4,20 @@ from app.models.base_model import BaseModel
 import uuid
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
-from sqlalchemy import Boolean, Column 
+from sqlalchemy import Boolean, Column, String
 
 
 bcrypt = Bcrypt
 
 
 class User(BaseModel):
+    __tablename__ = 'users'
+
+    first_name = Column(String(128), nullable=True)
+    last_name = Column(String(128), nullable=True)
+    email = Column(String(128), nullable=False, unique=True)
+    password = Column(String(128), nullable=False)
+
     is_admin = Column(Boolean, default= False)
     """User Model"""
     def __init__(self, id, email, password, **kwargs):
@@ -22,7 +29,7 @@ class User(BaseModel):
     
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-        
+
     def check_password(self , password):
         return bcrypt.check_password_hash(self._password, password)
     
