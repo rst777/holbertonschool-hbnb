@@ -1,8 +1,16 @@
 """Review model module"""
 from datetime import datetime
 from app.models.base_model import BaseModel
+from sqlalchemy import Column, String
 
 class Review(BaseModel):
+    """Modèle SQLAlchemy pour l'entité Review."""
+    
+    __tablename__ = 'reviews'
+    
+    text = Column(String(1024), nullable=False)
+
+
     """Review Model"""
     def __init__(self, *args, **kwargs):
         """Initialize review"""
