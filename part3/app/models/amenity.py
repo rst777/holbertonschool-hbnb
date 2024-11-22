@@ -2,8 +2,16 @@
 from datetime import datetime
 from app.models.base_model import BaseModel
 import uuid
+from sqlalchemy import Column, String
 
 class Amenity(BaseModel):
+    """Modèle SQLAlchemy pour l'entité Amenity."""
+    
+    __tablename__ = 'amenities'
+    
+    name = Column(String(128), nullable=False)
+
+
     """Amenity Model"""
     def __init__(self, *args, **kwargs):
         """Initialize amenity"""
