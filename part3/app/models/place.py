@@ -1,6 +1,21 @@
 from app.models.base_model import BaseModel
-
+from sqlalchemy import Column, String, Integer
+from models.base_model import BaseModel
 class Place(BaseModel):
+    """Modèle SQLAlchemy pour l'entité Place."""
+    
+    __tablename__ = 'places'
+    
+    name = Column(String(128), nullable=False)
+    description = Column(String(1024), nullable=True)
+    number_rooms = Column(Integer, default=0, nullable=False)
+    number_bathrooms = Column(Integer, default=0, nullable=False)
+    max_guest = Column(Integer, default=0, nullable=False)
+    price_by_night = Column(Integer, default=0, nullable=False)
+
+
+
+
     """Place Model"""
     
     def __init__(self, *args, **kwargs):
