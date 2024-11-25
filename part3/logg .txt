@@ -1,0 +1,4 @@
+"""" LOGG POUR MYSQL"""
+
+mysql -u root -p
+mdp :  root
