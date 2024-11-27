@@ -11,6 +11,7 @@ from models.city import City
 from models.user import User
 import uuid
 
+
 class TestPlaceAmenitiesAPI(unittest.TestCase):
     """Test cases for Place-Amenity API"""
 
@@ -81,7 +82,7 @@ class TestPlaceAmenitiesAPI(unittest.TestCase):
         self.client.post(
             f'/api/v1/places/{self.place.id}/amenities/{self.amenity.id}'
         )
-        
+
         # Then try to unlink it
         response = self.client.delete(
             f'/api/v1/places/{self.place.id}/amenities/{self.amenity.id}'

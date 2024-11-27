@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from hashlib import md5
 import re
 
+
 class User(BaseModel, Base):
     """Representation of a User."""
     __tablename__ = 'users'
@@ -29,8 +30,14 @@ class User(BaseModel, Base):
             if self.last_name and not isinstance(self.last_name, str):
                 raise ValueError("Last name must be a string.")
 
-    places = relationship("Place", backref="user", cascade="all, delete-orphan")
-    reviews = relationship("Review", backref="user", cascade="all, delete-orphan")
+    places = relationship(
+        "Place",
+        backref="user",
+        cascade="all, delete-orphan")
+    reviews = relationship(
+        "Review",
+        backref="user",
+        cascade="all, delete-orphan")
 
     def __setattr__(self, name, value):
         """Hash password when setting"""

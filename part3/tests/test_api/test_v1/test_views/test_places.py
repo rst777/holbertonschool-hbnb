@@ -38,7 +38,10 @@ class TestPlaceAPI(unittest.TestCase):
         self.city = city  # Stocker pour les tests
 
         # Ajouter un utilisateur
-        user = User(id=self.user_id, email="user@example.com", password="password")
+        user = User(
+            id=self.user_id,
+            email="user@example.com",
+            password="password")
         storage.new(user)
         self.user = user  # Stocker pour les tests
 

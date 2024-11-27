@@ -26,7 +26,10 @@ class TestCityAPI(unittest.TestCase):
         storage.new(self.state)
 
         # Ajouter une ville associée
-        self.city = City(id=self.city_id, name="Test City", state_id=self.state_id)
+        self.city = City(
+            id=self.city_id,
+            name="Test City",
+            state_id=self.state_id)
         storage.new(self.city)
 
         # Sauvegarder les données dans le stockage
@@ -42,7 +45,8 @@ class TestCityAPI(unittest.TestCase):
         response = self.client.get(f'/api/v1/states/{self.state_id}/cities')
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json, list)
-        self.assertGreaterEqual(len(response.json), 1)  # Au moins 1 ville existe
+        # Au moins 1 ville existe
+        self.assertGreaterEqual(len(response.json), 1)
 
     def test_get_city(self):
         """Test GET /api/v1/cities/<city_id>"""

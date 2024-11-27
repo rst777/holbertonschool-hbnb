@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 import uuid
 
+
 class TestReviewAPI(unittest.TestCase):
     """Test cases for Review API"""
 
@@ -19,7 +20,7 @@ class TestReviewAPI(unittest.TestCase):
         try:
             storage.rollback()
             storage.delete_all()  # Nettoie la base avant de commencer
-            
+
             self.client = app.test_client()
             self.headers = {'Content-Type': 'application/json'}
 
@@ -80,7 +81,8 @@ class TestReviewAPI(unittest.TestCase):
 
             created_review = storage.get(Review, self.review_id)
             if not created_review:
-                raise Exception(f"Review {self.review_id} not found after creation")
+                raise Exception(
+                    f"Review {self.review_id} not found after creation")
 
             # Vérification de la place
             created_place = storage.get(Place, self.place_id)
@@ -89,7 +91,6 @@ class TestReviewAPI(unittest.TestCase):
 
             print(f"Review created: {created_review.id}")
             print(f"Place found: {created_place.id}")
-
 
         except Exception as e:
             print(f"Error in setUp: {str(e)}")

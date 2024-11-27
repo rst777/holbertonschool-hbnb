@@ -8,10 +8,11 @@ from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
 
+
 def setup_test_db():
     """Setup test database with sample data"""
     storage.reload()
-    
+
     # Create test user
     user = User(
         email="test@test.com",
@@ -20,18 +21,18 @@ def setup_test_db():
         last_name="User"
     )
     user.save()
-    
+
     # Create test state
     state = State(name="California")
     state.save()
-    
+
     # Create test city
     city = City(
         state_id=state.id,
         name="San Francisco"
     )
     city.save()
-    
+
     # Create test place
     place = Place(
         city_id=city.id,
@@ -44,11 +45,11 @@ def setup_test_db():
         price_by_night=100
     )
     place.save()
-    
+
     # Create test amenity
     amenity = Amenity(name="WiFi")
     amenity.save()
-    
+
     # Create test review
     review = Review(
         place_id=place.id,
@@ -56,7 +57,7 @@ def setup_test_db():
         text="Great place!"
     )
     review.save()
-    
+
     return {
         'user': user,
         'state': state,
@@ -65,6 +66,7 @@ def setup_test_db():
         'amenity': amenity,
         'review': review
     }
+
 
 def clear_test_db():
     """Clear all data from test database"""
@@ -76,6 +78,7 @@ def clear_test_db():
     storage._DBStorage__session.query(Amenity).delete()
     storage._DBStorage__session.commit()
 
+
 def with_test_db(f):
     """Decorator to setup and teardown test database"""
     @wraps(f)
@@ -86,3 +89,7 @@ def with_test_db(f):
         finally:
             clear_test_db()
     return wrapper
+
+def clear_test_db():
+    """Clear test database."""
+    storage.close()

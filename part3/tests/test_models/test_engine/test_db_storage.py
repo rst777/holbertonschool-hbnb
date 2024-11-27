@@ -15,16 +15,30 @@ class TestDBStorage(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up the test database and initialize DBStorage"""
-        cls.storage = DBStorage()
-        cls.storage.reload()  # Ensure session is initialized
-        cls.test_objects = []
+        cls.storage = DBStorage()  # Crée une instance de DBStorage
+        cls.storage.reload()  # Charge les objets existants dans la session
+
+        cls.state = State(name="California")
+        cls.storage.new(cls.state)
+        cls.storage.save()
+
+        cls.city = City(name="San Francisco", state_id=cls.state.id)
+        cls.storage.new(cls.city)
+        cls.storage.save()
+
+        # Liste d'objets à supprimer après les tests
+        cls.test_objects = [cls.state, cls.city]
 
     @classmethod
     def tearDownClass(cls):
         """Clean up after all tests"""
-        for obj in cls.test_objects:
-            cls.storage.delete(obj)
-        cls.storage.save()
+        try:
+            for obj in cls.test_objects:
+                cls.storage.delete(obj)
+            cls.storage.save()
+        except Exception as e:
+            print(f"Error during cleanup: {e}")
+            cls.storage._DBStorage__session.rollback()  # Restaure la session
 
     def setUp(self):
         """Set up data for each test"""
@@ -47,8 +61,14 @@ class TestDBStorage(unittest.TestCase):
             user_id=self.user.id,
             text="Great place!"
         )
-        # Add objects to test_objects for cleanup
-        self.test_objects = [self.user, self.state, self.city, self.place, self.amenity, self.review]
+        # Ajoutez les objets pour le nettoyage
+        self.test_objects = [
+            self.user,
+            self.state,
+            self.city,
+            self.place,
+            self.amenity,
+            self.review]
 
     def test_all(self):
         """Test retrieving all objects"""
@@ -76,6 +96,7 @@ class TestDBStorage(unittest.TestCase):
         """Test saving objects"""
         self.storage.new(self.state)
         self.storage.save()
+        self.storage._DBStorage__session.flush()
         result = self.storage.all(State)
         self.assertIn(f"State.{self.state.id}", result)
 
@@ -95,6 +116,7 @@ class TestDBStorage(unittest.TestCase):
         self.storage.reload()
         result = self.storage.all(Place)
         self.assertIn(f"Place.{self.place.id}", result)
+
 
 if __name__ == '__main__':
     unittest.main()

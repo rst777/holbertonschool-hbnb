@@ -11,9 +11,10 @@ from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
 
+
 class TestAPI(unittest.TestCase):
     """Test API class"""
-    
+
     @classmethod
     def setUpClass(cls):
         """Setup test class"""
@@ -161,6 +162,7 @@ class TestAPI(unittest.TestCase):
         places = r.json()
         self.assertEqual(len(places), 1)
         self.assertEqual(places[0]['name'], place_data['name'])
+
 
 if __name__ == '__main__':
     unittest.main()

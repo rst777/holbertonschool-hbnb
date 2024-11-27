@@ -7,6 +7,7 @@ import uuid
 
 Base = declarative_base()
 
+
 class BaseModel(Base):
     """BaseModel class"""
     __abstract__ = True

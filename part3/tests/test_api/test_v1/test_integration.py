@@ -11,6 +11,7 @@ from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
 
+
 class TestIntegration(unittest.TestCase):
     def setUp(self):
         """Set up test environment"""
@@ -37,7 +38,8 @@ class TestIntegration(unittest.TestCase):
             print(f"Found {obj_type.__name__}: {obj.to_dict()}")
         else:
             print(f"WARNING: {obj_type.__name__} not found!")
-        self.assertIsNotNone(obj, f"{obj_type.__name__} with id {obj_id} not found in database")
+        self.assertIsNotNone(
+            obj, f"{obj_type.__name__} with id {obj_id} not found in database")
         return obj
 
     def test_full_booking_flow(self):
@@ -174,13 +176,14 @@ class TestIntegration(unittest.TestCase):
                 'amenities': [amenity_id]
             }
             print(f"Search data to send: {search_data}")
-            
+
             # Verify objects exist before search
             print("\nVerifying objects before search:")
             print(f"State exists: {storage.get(State, state_id) is not None}")
             print(f"City exists: {storage.get(City, city_id) is not None}")
-            print(f"Amenity exists: {storage.get(Amenity, amenity_id) is not None}")
-            
+            print(
+                f"Amenity exists: {storage.get(Amenity, amenity_id) is not None}")
+
             response = self.client.post(
                 '/api/v1/places_search',
                 data=json.dumps(search_data),
@@ -188,7 +191,7 @@ class TestIntegration(unittest.TestCase):
             )
             print(f"Search response status: {response.status_code}")
             print(f"Search response data: {response.data.decode()}")
-            
+
             self.assertEqual(response.status_code, 200)
             self.assertTrue(len(response.json) > 0)
             print("\n=== Full booking flow test completed successfully ===")
@@ -199,6 +202,7 @@ class TestIntegration(unittest.TestCase):
             print(f"Traceback:\n{traceback.format_exc()}")
             storage.rollback()
             raise
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -37,7 +37,8 @@ class TestStateAPI(unittest.TestCase):
         response = self.client.get('/api/v1/states')
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.json, list)
-        self.assertGreaterEqual(len(response.json), 1)  # Vérifie qu'au moins 1 état existe
+        # Vérifie qu'au moins 1 état existe
+        self.assertGreaterEqual(len(response.json), 1)
 
     def test_get_state(self):
         """Test GET /api/v1/states/<state_id>"""

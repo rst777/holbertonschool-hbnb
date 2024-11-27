@@ -63,8 +63,11 @@ class TestUserAPI(unittest.TestCase):
     @patch('models.storage.save')
     def test_create_user(self, mock_storage_save, mock_storage_new):
         """Test POST /api/v1/users"""
-        response = self.client.post('/api/v1/users', data=json.dumps(self.user_data),
-                                     content_type='application/json')
+        response = self.client.post(
+            '/api/v1/users',
+            data=json.dumps(
+                self.user_data),
+            content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
         mock_storage_new.assert_called_once()
@@ -80,8 +83,10 @@ class TestUserAPI(unittest.TestCase):
         mock_storage_get.return_value = self.user
 
         updated_data = {"first_name": "UpdatedName"}
-        response = self.client.put(f'/api/v1/users/{self.user.id}', data=json.dumps(updated_data),
-                                    content_type='application/json')
+        response = self.client.put(
+            f'/api/v1/users/{self.user.id}',
+            data=json.dumps(updated_data),
+            content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
         mock_storage_save.assert_called_once()

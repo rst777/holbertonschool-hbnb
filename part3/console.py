@@ -21,6 +21,7 @@ classes = {
     'Review': Review
 }
 
+
 class HBNBCommand(cmd.Cmd):
     """HBNB command interpreter"""
     prompt = '(hbnb) '
@@ -61,18 +62,19 @@ class HBNBCommand(cmd.Cmd):
             elif '.' in value:
                 try:
                     value = float(value)
-                except:
+                except BaseException:
                     continue
             else:
-               try:
-                   value = int(value)
-               except:
-                   continue
+                try:
+                    value = int(value)
+                except BaseException:
+                    continue
             new_dict[key] = value
 
         new_instance = classes[args[0]](**new_dict)
         new_instance.save()
         print(new_instance.id)
+
 
 def do_show(self, arg):
     """Show an instance based on the class name and id."""
@@ -89,125 +91,128 @@ def do_show(self, arg):
         return
 
     def do_destroy(self, arg):
-       """Delete instance"""
-       args = shlex.split(arg)
-       if not args:
-           print("** class name missing **")
-           return
-       if args[0] not in classes:
-           print("** class doesn't exist **")
-           return
-       if len(args) < 2:
-           print("** instance id missing **")
-           return
-       key = f"{args[0]}.{args[1]}"
-       if key not in storage.all():
-           print("** no instance found **")
-           return
-       del storage.all()[key]
-       storage.save()
+        """Delete instance"""
+        args = shlex.split(arg)
+        if not args:
+            print("** class name missing **")
+            return
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        key = f"{args[0]}.{args[1]}"
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+        del storage.all()[key]
+        storage.save()
 
     def do_all(self, arg):
-       """Show all instances"""
-       args = shlex.split(arg)
-       obj_list = []
-       if not args:
-           for obj in storage.all().values():
-               obj_list.append(str(obj))
-       elif args[0] in classes:
-           for key, obj in storage.all().items():
-               if key.split('.')[0] == args[0]:
-                   obj_list.append(str(obj))
-       else:
-           print("** class doesn't exist **")
-           return
-       print(obj_list)
+        """Show all instances"""
+        args = shlex.split(arg)
+        obj_list = []
+        if not args:
+            for obj in storage.all().values():
+                obj_list.append(str(obj))
+        elif args[0] in classes:
+            for key, obj in storage.all().items():
+                if key.split('.')[0] == args[0]:
+                    obj_list.append(str(obj))
+        else:
+            print("** class doesn't exist **")
+            return
+        print(obj_list)
 
     def do_update(self, arg):
-       """Update instance attributes"""
-       args = shlex.split(arg)
-       if not args:
-           print("** class name missing **")
-           return
-       if args[0] not in classes:
-           print("** class doesn't exist **")
-           return
-       if len(args) < 2:
-           print("** instance id missing **")
-           return
-       key = f"{args[0]}.{args[1]}"
-       if key not in storage.all():
-           print("** no instance found **")
-           return
-       if len(args) < 3:
-           print("** attribute name missing **")
-           return
-       if len(args) < 4:
-           print("** value missing **")
-           return
-       
-       obj = storage.all()[key]
-       attr_name = args[2]
-       attr_value = args[3]
-       
-       try:
-           attr_value = eval(attr_value)
-       except:
-           pass
-           
-       setattr(obj, attr_name, attr_value)
-       obj.save()
+        """Update instance attributes"""
+        args = shlex.split(arg)
+        if not args:
+            print("** class name missing **")
+            return
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        key = f"{args[0]}.{args[1]}"
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+        if len(args) < 4:
+            print("** value missing **")
+            return
+
+        obj = storage.all()[key]
+        attr_name = args[2]
+        attr_value = args[3]
+
+        try:
+            attr_value = eval(attr_value)
+        except BaseException:
+            pass
+
+        setattr(obj, attr_name, attr_value)
+        obj.save()
 
     def default(self, arg):
-       """Handle class method calls"""
-       args = arg.split('.')
-       if len(args) != 2:
-           print("*** Unknown syntax:", arg)
-           return
-           
-       class_name = args[0]
-       if class_name not in classes:
-           print("** class doesn't exist **")
-           return
-           
-       command = args[1].split('(')
-       if len(command) != 2:
-           print("*** Unknown syntax:", arg)
-           return
-           
-       method_name = command[0]
-       params = command[1].rstrip(')')
-       
-       if method_name == 'all':
-           self.do_all(class_name)
-       elif method_name == 'count':
-           print(len([obj for obj in storage.all().values() 
-                     if obj.__class__.__name__ == class_name]))
-       elif method_name == 'show':
-           self.do_show(f"{class_name} {params.strip('\"')}")
-       elif method_name == 'destroy':
-           self.do_destroy(f"{class_name} {params.strip('\"')}")
-       elif method_name == 'update':
-           params = params.split(',')
-           if len(params) < 2:
-               print("*** Unknown syntax:", arg)
-               return
-           instance_id = params[0].strip().strip('"')
-           if len(params) == 2:  # Update with dictionary
-               try:
-                   update_dict = eval(params[1])
-                   if not isinstance(update_dict, dict):
-                       raise ValueError
-                   for key, value in update_dict.items():
-                       self.do_update(f"{class_name} {instance_id} {key} {value}")
-               except:
-                   print("*** Unknown syntax:", arg)
-           else:  # Normal update
-               attr_name = params[1].strip().strip('"')
-               attr_value = params[2].strip().strip('"')
-               self.do_update(f"{class_name} {instance_id} {attr_name} {attr_value}")
-       else:
-           print("*** Unknown syntax:", arg)
-           
+        """Handle class method calls"""
+        args = arg.split('.')
+        if len(args) != 2:
+            print("*** Unknown syntax:", arg)
+            return
+
+        class_name = args[0]
+        if class_name not in classes:
+            print("** class doesn't exist **")
+            return
+
+        command = args[1].split('(')
+        if len(command) != 2:
+            print("*** Unknown syntax:", arg)
+            return
+
+        method_name = command[0]
+        params = command[1].rstrip(')')
+
+        if method_name == 'all':
+            self.do_all(class_name)
+        elif method_name == 'count':
+            print(len([obj for obj in storage.all().values()
+                      if obj.__class__.__name__ == class_name]))
+        elif method_name == 'show':
+            self.do_show(f"{class_name} {params.strip('\"')}")
+        elif method_name == 'destroy':
+            self.do_destroy(f"{class_name} {params.strip('\"')}")
+        elif method_name == 'update':
+            params = params.split(',')
+            if len(params) < 2:
+                print("*** Unknown syntax:", arg)
+                return
+            instance_id = params[0].strip().strip('"')
+            if len(params) == 2:  # Update with dictionary
+                try:
+                    update_dict = eval(params[1])
+                    if not isinstance(update_dict, dict):
+                        raise ValueError
+                    for key, value in update_dict.items():
+                        self.do_update(
+                            f"{class_name} {instance_id} {key} {value}")
+                except BaseException:
+                    print("*** Unknown syntax:", arg)
+            else:  # Normal update
+                attr_name = params[1].strip().strip('"')
+                attr_value = params[2].strip().strip('"')
+                self.do_update(
+                    f"{class_name} {instance_id} {attr_name} {attr_value}")
+        else:
+            print("*** Unknown syntax:", arg)
+
+
 if __name__ == '__main__':
-   HBNBCommand().cmdloop()
+    HBNBCommand().cmdloop()

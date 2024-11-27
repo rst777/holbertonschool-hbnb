@@ -5,11 +5,13 @@ import json
 import sys
 import time
 
+
 class Colors:
     GREEN = '\033[92m'
     RED = '\033[91m'
     YELLOW = '\033[93m'
     RESET = '\033[0m'
+
 
 def print_test(name, passed, message=""):
     """Affiche le résultat du test avec couleur"""
@@ -17,6 +19,7 @@ def print_test(name, passed, message=""):
     print(f"{status} {name}")
     if message and not passed:
         print(f"  {Colors.RED}Error: {message}{Colors.RESET}")
+
 
 def test_endpoint(method, url, data=None, expected_status=200):
     """Test un endpoint et retourne le résultat"""
@@ -33,6 +36,7 @@ def test_endpoint(method, url, data=None, expected_status=200):
         return response.status_code == expected_status, response.json()
     except Exception as e:
         return False, str(e)
+
 
 def run_tests():
     """Exécute tous les tests"""
@@ -63,7 +67,9 @@ def run_tests():
         user_id = result.get('id')
         # Vérifier que le mot de passe est bien hashé
         if 'password' in result:
-            tests.append(("Password Hashing", len(result['password']) == 32, result))
+            tests.append(
+                ("Password Hashing", len(
+                    result['password']) == 32, result))
 
     # Test 4: Création State
     state_data = {"name": "California"}
@@ -76,7 +82,7 @@ def run_tests():
     if 'state_id' in locals():
         city_data = {"name": "San Francisco"}
         passed, result = test_endpoint(
-            'POST', 
+            'POST',
             f'/api/v1/states/{state_id}/cities',
             city_data,
             201
@@ -134,7 +140,8 @@ def run_tests():
     tests.append(("Places Search", passed, result))
 
     # Test 10: Test Error 404
-    passed, result = test_endpoint('GET', '/api/v1/invalid', expected_status=404)
+    passed, result = test_endpoint(
+        'GET', '/api/v1/invalid', expected_status=404)
     tests.append(("404 Error Handling", passed, result))
 
     # Afficher les résultats
@@ -155,6 +162,7 @@ def run_tests():
     print(f"{Colors.RED}Tests échoués: {failed_count}{Colors.RESET}")
     print(f"Pourcentage de réussite: {(passed_count/total)*100:.2f}%")
     print("=" * 50)
+
 
 if __name__ == "__main__":
     try:

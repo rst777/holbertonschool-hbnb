@@ -5,7 +5,9 @@ pwd = "hbnb_dev_pwd"
 host = "localhost"
 db = "hbnb_dev_db"
 
-engine = create_engine(f'mysql+mysqldb://{user}:{pwd}@{host}/{db}', pool_pre_ping=True)
+engine = create_engine(
+    f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
+    pool_pre_ping=True)
 
 try:
     connection = engine.connect()

@@ -7,6 +7,7 @@ from models.state import State
 from models import storage
 import json
 
+
 class TestCityAPI(unittest.TestCase):
     """Test cases for City API"""
 
@@ -23,8 +24,8 @@ class TestCityAPI(unittest.TestCase):
         """Test POST /api/v1/states/<state_id>/cities"""
         mock_client.return_value.post.return_value.status_code = 201
         response = mock_client().post(f'/api/v1/states/{self.state.id}/cities',
-                                       data=json.dumps({"name": "Los Angeles"}),
-                                       content_type='application/json')
+                                      data=json.dumps({"name": "Los Angeles"}),
+                                      content_type='application/json')
         self.assertEqual(response.status_code, 201)
 
     @patch('api.v1.app.app.test_client')
@@ -39,8 +40,8 @@ class TestCityAPI(unittest.TestCase):
         """Test PUT /api/v1/cities/<city_id>"""
         mock_client.return_value.put.return_value.status_code = 200
         response = mock_client().put(f'/api/v1/cities/{self.city.id}',
-                                      data=json.dumps({'name': 'Updated City'}),
-                                      content_type='application/json')
+                                     data=json.dumps({'name': 'Updated City'}),
+                                     content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
     @patch('api.v1.app.app.test_client')
@@ -49,6 +50,7 @@ class TestCityAPI(unittest.TestCase):
         mock_client.return_value.delete.return_value.status_code = 200
         response = mock_client().delete(f'/api/v1/cities/{self.city.id}')
         self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,6 +11,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
+
 class DBStorage:
     """Database Storage Class"""
     __engine = None
@@ -43,9 +44,10 @@ class DBStorage:
         env = getenv('HBNB_ENV') or 'test'
 
         if not all([user, pwd, host, db]):
-            print(f"USER: {user}, PWD: {pwd}, HOST: {host}, DB: {db}, ENV: {env}")
+            print(
+                f"USER: {user}, PWD: {pwd}, HOST: {host}, DB: {db}, ENV: {env}")
             raise Exception("Missing MySQL environment variables.")
-        
+
         self.__engine = create_engine(
             f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
             pool_pre_ping=True
@@ -53,7 +55,6 @@ class DBStorage:
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
-        
 
     def all(self, cls=None):
         """Query objects"""
@@ -62,7 +63,7 @@ class DBStorage:
             'Amenity': Amenity, 'Place': Place, 'Review': Review
         }
         objects = {}
-        
+
         if cls:
             if isinstance(cls, str):
                 cls = classes.get(cls)
@@ -96,7 +97,8 @@ class DBStorage:
     def reload(self):
         """Create all tables and session"""
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+            bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
 
@@ -117,7 +119,7 @@ class DBStorage:
     def count(self, cls=None):
         """Count objects"""
         return len(self.all(cls))
-    
+
     def delete_all(self):
         """Delete all objects in the correct order"""
         try:

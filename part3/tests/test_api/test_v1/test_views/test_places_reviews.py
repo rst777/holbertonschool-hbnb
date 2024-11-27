@@ -11,8 +11,10 @@ from models.state import State
 from models.city import City
 import uuid
 
+
 class TestReviewAPI(unittest.TestCase):
     """Test cases for Review API"""
+
 
 def setUp(self):
     """Initialisation des données nécessaires pour les tests"""

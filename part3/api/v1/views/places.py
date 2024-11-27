@@ -9,13 +9,16 @@ from models.place import Place
 from models.state import State
 from models.amenity import Amenity
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
+
+@app_views.route('/cities/<city_id>/places',
+                 methods=['GET'], strict_slashes=False)
 def get_places(city_id):
     """Get all places of a city"""
     city = storage.get(City, city_id)
     if not city:
         abort(404)
     return jsonify([place.to_dict() for place in city.places])
+
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def get_place(place_id):
@@ -25,7 +28,10 @@ def get_place(place_id):
         abort(404)
     return jsonify(place.to_dict())
 
-@app_views.route('/places/<place_id>', methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>',
+                 methods=['DELETE'],
+                 strict_slashes=False)
 def delete_place(place_id):
     """Delete a place by ID"""
     place = storage.get(Place, place_id)
@@ -38,7 +44,9 @@ def delete_place(place_id):
     response.headers["Content-Type"] = "application/json"
     return response, 200
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
+
+@app_views.route('/cities/<city_id>/places',
+                 methods=['POST'], strict_slashes=False)
 def create_place(city_id):
     """Create a new Place for a given City"""
 
@@ -75,6 +83,7 @@ def create_place(city_id):
     storage.save()
     return jsonify(place.to_dict()), 201
 
+
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def update_place(place_id):
     """Update place"""
@@ -91,6 +100,7 @@ def update_place(place_id):
     storage.save()
     return jsonify(place.to_dict())
 
+
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def places_search():
     """Search places based on states, cities and amenities"""
@@ -99,15 +109,15 @@ def places_search():
         if not request.get_json():
             print("No JSON data received")
             abort(400, description="Not a JSON")
-        
+
         data = request.get_json()
         print(f"\nReceived search data: {data}")
         places = []
 
         # Si aucun critère n'est fourni
-        if not data or (not data.get('states') and 
-                       not data.get('cities') and 
-                       not data.get('amenities')):
+        if not data or (not data.get('states') and
+                        not data.get('cities') and
+                        not data.get('amenities')):
             print("\nNo search criteria - returning all places")
             all_places = storage.all(Place).values()
             return jsonify([place.to_dict() for place in all_places])
@@ -122,7 +132,8 @@ def places_search():
                     for city in state.cities:
                         print(f"Processing city: {city.name}")
                         places.extend([place for place in city.places])
-                        print(f"Places found in {city.name}: {len(city.places)}")
+                        print(
+                            f"Places found in {city.name}: {len(city.places)}")
 
         # Chercher par cities
         if data.get('cities'):
@@ -190,7 +201,8 @@ def places_search():
         import traceback
         print(f"Traceback:\n{traceback.format_exc()}")
         abort(500, description=str(e))
-        
+
+
 @app_views.route('/places/<place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
 def get_place_amenities(place_id):
@@ -200,8 +212,9 @@ def get_place_amenities(place_id):
         abort(404)
     return jsonify([amenity.to_dict() for amenity in place.amenities])
 
-@app_views.route('/places/<place_id>/amenities/<amenity_id>', 
-                methods=['POST'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/amenities/<amenity_id>',
+                 methods=['POST'], strict_slashes=False)
 def link_amenity_to_place(place_id, amenity_id):
     """Link an amenity to a place"""
     place = storage.get(Place, place_id)
@@ -219,8 +232,9 @@ def link_amenity_to_place(place_id, amenity_id):
     storage.save()
     return jsonify(amenity.to_dict())
 
-@app_views.route('/places/<place_id>/amenities/<amenity_id>', 
-                methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/amenities/<amenity_id>',
+                 methods=['DELETE'], strict_slashes=False)
 def unlink_amenity_from_place(place_id, amenity_id):
     """Unlink an amenity from a place"""
     place = storage.get(Place, place_id)

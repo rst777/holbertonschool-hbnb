@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import validates
 
+
 class Amenity(BaseModel, Base):
     """Amenity Class"""
     __tablename__ = 'amenities'
@@ -14,7 +15,7 @@ class Amenity(BaseModel, Base):
         if not value or len(value.strip()) == 0:
             raise ValueError("Name cannot be empty.")
         return value
-    
+
     def to_dict(self):
         """Convert Amenity instance to dictionary"""
         obj_dict = super().to_dict()  # Appelle la méthode to_dict() de BaseModel

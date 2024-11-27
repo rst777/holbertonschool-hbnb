@@ -11,6 +11,7 @@ from api.v1.app import app
 # Simuler une application Flask
 app = Flask(__name__)
 
+
 class TestUserAPI(unittest.TestCase):
     """Test cases for User API"""
 
@@ -36,8 +37,11 @@ class TestUserAPI(unittest.TestCase):
             'id': '1234',
             'email': self.user_data['email']
         }
-        response = mock_client().post('/api/v1/users', data=json.dumps(self.user_data),
-                                       content_type='application/json')
+        response = mock_client().post(
+            '/api/v1/users',
+            data=json.dumps(
+                self.user_data),
+            content_type='application/json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['email'], self.user_data['email'])
 
@@ -52,6 +56,7 @@ class TestUserAPI(unittest.TestCase):
         response = mock_client().get('/api/v1/users/1234')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['email'], self.user_data['email'])
+
 
 if __name__ == '__main__':
     unittest.main()

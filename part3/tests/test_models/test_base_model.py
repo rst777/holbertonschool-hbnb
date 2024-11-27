@@ -6,6 +6,7 @@ from models.base_model import BaseModel
 from models.exceptions import ValidationError
 from api.v1.app import app
 
+
 class TestBaseModel(unittest.TestCase):
     """Test cases for BaseModel class"""
 

@@ -9,6 +9,7 @@ from flask import Flask
 app = Flask(__name__)
 swagger = Swagger(app)
 
+
 class TestDocumentation(unittest.TestCase):
     """Test the API documentation"""
 
@@ -26,7 +27,7 @@ class TestDocumentation(unittest.TestCase):
         response = self.client.get('/apispec_1.json')
         self.assertEqual(response.status_code, 200)
         spec = json.loads(response.data.decode('utf-8'))
-        
+
         # Verify essential elements
         self.assertIn('swagger', spec)
         self.assertIn('info', spec)
@@ -36,7 +37,7 @@ class TestDocumentation(unittest.TestCase):
         """Test if all endpoints are documented"""
         response = self.client.get('/apispec_1.json')
         spec = json.loads(response.data.decode('utf-8'))
-        
+
         # List of required endpoints
         required_endpoints = [
             '/api/v1/documentation/states/[]',
@@ -45,9 +46,10 @@ class TestDocumentation(unittest.TestCase):
             '/api/v1/documentation/reviews',
             '/api/v1/documentation/users'
         ]
-        
+
         for endpoint in required_endpoints:
             self.assertIn(endpoint, spec['paths'].keys())
+
 
 if __name__ == '__main__':
     unittest.main()

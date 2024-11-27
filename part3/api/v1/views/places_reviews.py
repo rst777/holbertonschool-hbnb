@@ -5,7 +5,9 @@ from models.place import Place
 from models.review import Review
 from models.user import User
 
-@app_views.route('/places/<place_id>/reviews', methods=['GET'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/reviews',
+                 methods=['GET'], strict_slashes=False)
 def get_place_reviews(place_id):
     """Retrieve all reviews for a given place"""
     place = storage.get(Place, place_id)
@@ -14,7 +16,9 @@ def get_place_reviews(place_id):
     reviews = [review.to_dict() for review in place.reviews]
     return jsonify(reviews)
 
-@app_views.route('/places/<place_id>/reviews', methods=['POST'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>/reviews',
+                 methods=['POST'], strict_slashes=False)
 def create_review(place_id):
     """Create a new review"""
     place = storage.get(Place, place_id)
@@ -48,6 +52,7 @@ def create_review(place_id):
         print(f"Error creating review: {str(e)}")
         abort(500)
 
+
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
 def get_review(review_id):
     """Retrieve a specific review"""
@@ -56,33 +61,37 @@ def get_review(review_id):
         abort(404)
     return jsonify(review.to_dict())
 
+
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def update_review(review_id):
     """Update a review"""
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
-    
+
     try:
         data = request.get_json()
     except Exception:
         abort(400, "Not a JSON")
-        
+
     ignore_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
             setattr(review, key, value)
-            
+
     storage.save()
     return jsonify(review.to_dict())
 
-@app_views.route('/reviews/<review_id>', methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('/reviews/<review_id>',
+                 methods=['DELETE'],
+                 strict_slashes=False)
 def delete_review(review_id):
     """Delete a review"""
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
-        
+
     storage.delete(review)
     storage.save()
     return jsonify({}), 200

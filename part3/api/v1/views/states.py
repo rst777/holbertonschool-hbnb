@@ -6,12 +6,14 @@ from models import storage
 from models.state import State
 from flasgger.utils import swag_from
 
+
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/states/get_states.yml')
 def get_states():
     """Get all states"""
     states = [state.to_dict() for state in storage.all(State).values()]
     return jsonify(states)
+
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/states/get_state.yml')
@@ -22,7 +24,10 @@ def get_state(state_id):
         abort(404)
     return jsonify(state.to_dict())
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('/states/<state_id>',
+                 methods=['DELETE'],
+                 strict_slashes=False)
 @swag_from('documentation/states/delete_state.yml')
 def delete_state(state_id):
     """Delete a state by ID"""
@@ -34,6 +39,7 @@ def delete_state(state_id):
     response = jsonify({})
     response.headers["Content-Type"] = "application/json"
     return response, 200
+
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 @swag_from('documentation/states/post_state.yml')
@@ -52,6 +58,7 @@ def create_state():
     storage.new(state)
     storage.save()
     return jsonify(state.to_dict()), 201
+
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 @swag_from('documentation/states/put_state.yml')
