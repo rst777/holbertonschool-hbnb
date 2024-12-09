@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelStay - Places to Stay</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="images/icon.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">
+                <img src="images/logo.png" alt="TravelStay Logo" class="logo">
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html" class="login-button">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="filter">
+            <label for="price-filter">Max Price per Night:</label>
+            <select id="price-filter">
+                <option value="">All Prices</option>
+                <option value="50">Up to $50</option>
+                <option value="100">Up to $100</option>
+                <option value="200">Up to $200</option>
+                <option value="300">Up to $300</option>
+            </select>
+        </section>
+
+        <section id="places-list">
+            <!-- Placeholders for dynamic content -->
+            <div class="place-card">
+                <img src="images/place1.jpg" alt="Cozy Apartment in City Center">
+                <div class="place-info">
+                    <h2>Cozy Apartment in City Center</h2>
+                    <p class="price">$85 per night</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+            </div>
+
+            <div class="place-card">
+                <img src="images/place2.jpg" alt="Seaside Villa">
+                <div class="place-info">
+                    <h2>Seaside Villa</h2>
+                    <p class="price">$250 per night</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+            </div>
+
+            <div class="place-card">
+                <img src="images/place3.jpg" alt="Mountain Cabin">
+                <div class="place-info">
+                    <h2>Mountain Cabin</h2>
+                    <p class="price">$120 per night</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 TravelStay. All Rights Reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
