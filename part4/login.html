@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <img src="images/logo.png" class="logo" alt="Application Logo">
+    </header>
+    <nav>
+        <a href="index.html" class="nav-button">Home</a>
+        <a href="login.html" class="nav-button">Login</a>
+    </nav>
+    <main>
+        <form id="login-form" action="/login" method="post" novalidate>
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required
+                       aria-describedby="email-error">
+                <span id="email-error" class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required
+                       minlength="8" aria-describedby="password-error">
+                <span id="password-error" class="error-message"></span>
+            </div>
+
+            <div class="form-group checkbox">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="submit-btn">Login</button>
+
+            <div class="form-links">
+                <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
+                <span class="separator">|</span>
+                <a href="/register" class="register">Create Account</a>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 HBnB. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
