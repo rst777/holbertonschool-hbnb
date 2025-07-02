@@ -20,8 +20,8 @@ Bienvenue sur le front-end de l’application **HBnB**.
 
 1. Cloner le dépôt :
    ```bash
-   git clone <url_du_dépôt_front>
-   cd holberton-hbnb/part4
+   git clone https://github.com/rst777/holbertonschool-hbnb.git
+      cd holberton-hbnb/part4
 
 
 Ouvrir index.html dans votre navigateur
